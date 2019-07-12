@@ -1,69 +1,6 @@
 // @flow
-import { gql } from 'apollo-server';
 import * as R from 'ramda';
 import * as R_ from 'ramda-extension';
-
-const FranchiseSchema = gql`
-  type SeasonStats {
-    season            : Int!
-    totalHomeGames    : Int!
-    totalAwayGames    : Int!
-    totalGames        : Int!
-    totalWins         : Int!
-    totalLosses       : Int!
-    totalTies         : Int!
-    winningPercentage : Float!
-  }
-  
-  type TotalStats {
-    totalHomeGames    : Int!
-    totalAwayGames    : Int!
-    totalGames        : Int!
-    totalWins         : Int!
-    totalLosses       : Int!
-    totalTies         : Int!
-    winningPercentage : Float!
-  }
-  
-  type Franchise {
-    idFranchise       : String!
-    teamFull          : String!
-    teamAbbr          : String!
-    mascot            : String!
-    stadiumName       : String
-    activeFrom        : Int!
-    activeTo          : Int!
-    isActive          : Boolean!
-    totalStats        : TotalStats!
-    seasonStats       : [SeasonStats]!
-  }
-  
-  type FranchiseConnection {
-    cursor : String!
-    nodes  : [Franchise]!
-  }
-
-  enum FranchiseOrderField {
-    CREATED_AT
-    NAME
-    YEAR_FOUNDED
-  }
-
-  input FranchiseOrder {
-    direction : OrderDirection!
-    field     : FranchiseOrderField! 
-  }
-
-  extend type Query {
-    franchises(
-      cursor  : String
-      first   : Int
-      orderBy : FranchiseOrder 
-    ): FranchiseConnection
-  }
-`;
-
-const typeDefs = [FranchiseSchema];
 
 const fieldsMap = {
   CREATED_AT: 'id_franchise',
@@ -134,18 +71,49 @@ const getTotalStats = ({ teamAbbr }, args, { client }) => client
   .then(gameOutcomes => R_.camelizeKeys(gameOutcomes[0]))
   .catch(err => console.log(err));
 
-export const resolvers = {
-  Query: {
-    franchises: getFranchises,
-  },
-  Franchise: {
-    seasonStats: getSeasonStats,
-    totalStats: getTotalStats,
-  },
+type FranchisesOrder = {
+  direction?: 'asc' | 'desc',
+  field?: 'id' | 'name',
 };
 
+type FranchisesArgs = {
+  cursor?: ?string,
+  first?: ?number,
+  orderBy?: ?FranchisesOrder,
+};
 
-export default {
-  typeDefs,
-  resolvers,
+type Encode = (any) => string;
+
+const nodeToEdge = (encode: Encode) => node => ({
+  node,
+  cursor: encode(node.cursor),
+});
+
+export const FranchiseResolvers = {
+  Query: {
+    franchises: (_, args: FranchisesArgs, { franchiseSvc, util }) => {
+      const {
+        cursor,
+        first = 10,
+        orderBy = { direction: 'asc', field: 'id' },
+      } = args;
+
+      return franchiseSvc
+        .find({
+          cursor: cursor && util.fromBase64(cursor),
+          first,
+          orderBy,
+        });
+    },
+  },
+  FranchiseConnection: {
+    nodes: ({ franchises }) => franchises,
+    edges: ({ franchises }, args, { util }) => franchises
+      .map(nodeToEdge(util.toBase64)),
+    totalCount: ({ totalCount }) => totalCount,
+    pageInfo: ({ franchises }, args, { util }) => ({
+      startCursor: util.toBase64(R.prop('cursor', R.head(franchises))),
+      endCursor: util.toBase64(R.prop('cursor', R.last(franchises))),
+    }),
+  },
 };

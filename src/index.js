@@ -6,9 +6,11 @@ const config = {
   port: process.env.API_PORT || 4000,
 };
 
-const listenCallback = () => console.log('🚀 Server ready at http://localhost:4000!!');
+const listenCallback = () =>
+  console.log('🚀 Server ready at http://localhost:4000!!');
 
 createApi()
   .subscribe({
-    next: api => api.listen(config, listenCallback),
+    next: api => api
+      .listen(config, listenCallback),
   });

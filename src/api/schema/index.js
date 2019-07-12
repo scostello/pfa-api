@@ -11,8 +11,19 @@ const rootSchema = gql`
   scalar JSON
   
   enum OrderDirection {
-    ASC
-    DESC
+    asc
+    desc
+  }
+  
+  interface Node {
+    id  : ID!
+  }
+  
+  type PageInfo {
+    startCursor     : String
+    endCursor       : String    
+    hasNextPage     : Boolean!
+    hasPreviousPage : Boolean!
   }
   
   # Base Query type we'll use to extend in the other modules

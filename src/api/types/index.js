@@ -3,6 +3,7 @@
 export type ID = string;
 
 export type PersonName = {
+  title: string,
   first: string,
   middle?: string,
   last: string,
