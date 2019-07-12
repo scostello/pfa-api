@@ -35,7 +35,7 @@
     "graphql-kafka-subscriptions": "https://github.com/scostello/graphql-kafka-subscriptions#refs/heads/node12support",
     "graphql-tools": "^4.0.4",
     "graphql-type-json": "^0.3.0",
-    "lodash.merge": "^4.6.1",
+    "lodash.merge": "^4.6.2",
     "massive": "^5.11.0",
     "node-rdkafka": "https://github.com/lrecknagel/node-rdkafka#refs/heads/node12Support",
     "npm-watch": "^0.6.0",
