@@ -4,11 +4,20 @@ import { makeExecutableSchema } from 'graphql-tools';
 import { gql } from 'apollo-server';
 import merge from 'lodash.merge';
 import GraphQLJSON from 'graphql-type-json';
-import players from './players';
+import {
+  GraphQLDate,
+  GraphQLTime,
+  GraphQLDateTime,
+} from 'graphql-iso-date';
+import common from './common';
 import franchises from './franchises';
+import stadiums from './stadiums';
 
 const rootSchema = gql`
   scalar JSON
+  scalar Date
+  scalar Time
+  scalar DateTime
   
   enum OrderDirection {
     asc
@@ -41,6 +50,9 @@ const rootSchema = gql`
 `;
 
 const rootResolvers = {
+  Date: GraphQLDate,
+  Time: GraphQLTime,
+  DateTime: GraphQLDateTime,
   JSON: GraphQLJSON,
   Query: {
     _: () => true,
@@ -55,16 +67,17 @@ const rootResolvers = {
 
 const typeDefs = [
   rootSchema,
-  ...players.typeDefs,
+  ...common.typeDefs,
   ...franchises.typeDefs,
+  ...stadiums.typeDefs,
 ];
 
 const resolversFrom = R.prop('resolvers');
 
 const resolvers = merge(
   rootResolvers,
-  resolversFrom(players),
   resolversFrom(franchises),
+  resolversFrom(stadiums),
 );
 
 export default makeExecutableSchema({

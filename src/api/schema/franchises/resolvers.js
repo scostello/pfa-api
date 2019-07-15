@@ -116,4 +116,8 @@ export const FranchiseResolvers = {
       endCursor: util.toBase64(R.prop('cursor', R.last(franchises))),
     }),
   },
+  Franchise: {
+    stadium: (franchise, args, { franchiseSvc }) => franchiseSvc
+      .getStadiumFor(franchise),
+  },
 };

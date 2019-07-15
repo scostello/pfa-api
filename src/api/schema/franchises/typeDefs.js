@@ -25,7 +25,7 @@ export const FranchiseSchema = gql`
 
   type Franchise implements Node {
     id                : ID!
-    idStadium         : String
+    stadium           : Stadium
     idLogo            : String
     nameAbbr          : String!
     nameFull          : String!
@@ -60,6 +60,6 @@ export const FranchiseSchema = gql`
       cursor  : String
       first   : Int
       orderBy : FranchiseOrder
-    ): FranchiseConnection
+    ): FranchiseConnection!
   }
 `;

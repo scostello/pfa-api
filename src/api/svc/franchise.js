@@ -87,4 +87,15 @@ export default db => ({
           })),
       });
   },
+  getStadiumFor(franchise) {
+    return db
+      .withSchema('reporting')
+      .from('franchises')
+      .leftJoin('stadiums', 'franchises.id_stadium', 'stadiums.id_stadium')
+      .where('franchises.id_franchise', franchise.id)
+      .select([
+        'stadiums.name',
+      ])
+      .first();
+  },
 });
