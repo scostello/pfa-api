@@ -1,0 +1,44 @@
+version: '3'
+services:
+
+  pfa-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["yarn", "run", "watch"]
+    environment:
+      NODE_ENV: "local"
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DB_USER: postgres
+      PG_DB_PASSWORD: mysecretpassword
+      PG_DB_NAME: pro_football_analytics
+    volumes:
+      - ./src:/apps/pfa-api/src
+    depends_on:
+      - postgres
+    ports:
+      - "4000:4000"
+
+  postgres:
+    image: quay.io/sean.costello/postgis:2.5.2-debian
+    environment:
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: mysecretpassword
+      POSTGRESQL_DATABASE: pro_football_analytics
+    volumes:
+      - ./initdb.d:/docker-entrypoint-initdb.d
+      - pg-data:/bitnami
+    ports:
+      - "5434:5432"
+
+  pg-admin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: me@seancostello.io
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "3432:80"
+
+volumes:
+  pg-data:

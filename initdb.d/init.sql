@@ -1,0 +1,1 @@
+CREATE ROLE pfa_master WITH LOGIN ENCRYPTED PASSWORD 'P@ssword1!';
