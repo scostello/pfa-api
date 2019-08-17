@@ -4,10 +4,9 @@ import Bluebird from 'bluebird';
 type DbFranchise = {
   id_franchise: string,
   id_stadium: string,
-  id_logo: string,
-  team_abbr: string,
-  team_full: string,
-  mascot: string,
+  current_name_abbr: string,
+  current_name_full: string,
+  current_mascot: string,
   active_from: number,
   active_to: number,
 };
@@ -15,10 +14,9 @@ type DbFranchise = {
 type JsFranchise = {
   id: string,
   idStadium: string,
-  idLogo: string,
-  nameAbbr: string,
-  nameFull: string,
-  mascot: string,
+  currentNameAbbr: string,
+  currentNameFull: string,
+  currentMascot: string,
   activeFrom: number,
   activeTo: number,
 };
@@ -28,10 +26,9 @@ const serialize = {
     return {
       id: franchise.id_franchise,
       idStadium: franchise.id_stadium,
-      idLogo: franchise.id_logo,
-      nameAbbr: franchise.team_abbr,
-      nameFull: franchise.team_full,
-      mascot: franchise.mascot,
+      currentNameAbbr: franchise.current_name_abbr,
+      currentNameFull: franchise.current_name_full,
+      currentMascot: franchise.current_mascot,
       activeFrom: franchise.active_from,
       activeTo: franchise.active_to,
     };
@@ -50,8 +47,19 @@ const getTotalCount = db => db
   .count('id_franchise')
   .first();
 
+type OrderCriteria = {
+  direction: ('asc' | 'desc'),
+  field: string,
+};
+
+type FindCriteria = {
+  cursor?: string,
+  first?: ?number,
+  orderBy?: OrderCriteria,
+};
+
 export default db => ({
-  find(criteria) {
+  find(criteria: FindCriteria) {
     const {
       cursor,
       first = 10,
@@ -86,16 +94,5 @@ export default db => ({
             cursor: franchise[orderField],
           })),
       });
-  },
-  getStadiumFor(franchise) {
-    return db
-      .withSchema('reporting')
-      .from('franchises')
-      .leftJoin('stadiums', 'franchises.id_stadium', 'stadiums.id_stadium')
-      .where('franchises.id_franchise', franchise.id)
-      .select([
-        'stadiums.name',
-      ])
-      .first();
   },
 });

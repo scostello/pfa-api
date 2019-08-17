@@ -3,15 +3,17 @@ import { gql } from 'apollo-server';
 
 export const CommonTypeDefs = gql`
   
-  type Address {
-    streetAddress1  : String
-    streetAddress2  : String
+  type Location {
+    googleLocation  : JSON
+    street1         : String
+    street2         : String
     city            : String
     state           : String
-    zipCode         : String
-    countFips       : Int
-    latitude        : Float
+    zipcode         : String
+    countyFips      : Int
     longitude       : Float
+    latitude        : Float
+    geo             : String
   }
   
   type PersonName {

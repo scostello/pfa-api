@@ -8,14 +8,16 @@ import * as RxOp from 'rxjs/operators';
 
 import initDb from 'knex';
 import util from './util';
-import { FranchiseSvcFxty } from './svc';
+import { FranchiseSvcFxty, StadiumFxty } from './svc';
 import schema from './schema';
 
 const getContext = (db) => {
   const franchiseSvc = FranchiseSvcFxty(db);
+  const stadiumSvc = StadiumFxty(db);
 
   return ({ req }) => ({
     franchiseSvc,
+    stadiumSvc,
     util,
   });
 };

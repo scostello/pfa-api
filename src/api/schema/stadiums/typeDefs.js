@@ -6,7 +6,7 @@ export const StadiumSchema = gql`
   type Stadium implements Node {
     id          : ID!
     name        : String
-    address     : Address
+    location    : Location
     yearOpened  : Int
     capacity    : Int
   }

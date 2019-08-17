@@ -2,33 +2,12 @@
 import { gql } from 'apollo-server';
 
 export const FranchiseSchema = gql`
-  type SeasonStats {
-    season            : Int!
-    totalHomeGames    : Int!
-    totalAwayGames    : Int!
-    totalGames        : Int!
-    totalWins         : Int!
-    totalLosses       : Int!
-    totalTies         : Int!
-    winningPercentage : Float!
-  }
-
-  type TotalStats {
-    totalHomeGames    : Int!
-    totalAwayGames    : Int!
-    totalGames        : Int!
-    totalWins         : Int!
-    totalLosses       : Int!
-    totalTies         : Int!
-    winningPercentage : Float!
-  }
-
   type Franchise implements Node {
     id                : ID!
-    stadium           : Stadium
-    idLogo            : String
-    nameAbbr          : String!
-    nameFull          : String!
+    currentStadium    : Stadium
+    currentNameAbbr   : String!
+    currentNameFull   : String!
+    currentMascot     : String!
     activeFrom        : Int!
     activeTo          : Int!
   }
