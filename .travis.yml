@@ -3,7 +3,7 @@ services:
   - docker
 
 before_install:
-  - docker build -t quay.io/sean.costello/pfa-api:latest
+  - docker build -t quay.io/sean.costello/pfa-api:latest .
 
 script:
   - docker images
