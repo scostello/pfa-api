@@ -7,10 +7,7 @@ ENV BUILD_LIBRDKAFKA=0
 
 WORKDIR ${APP_PATH}
 
-COPY package*.json ./
-COPY yarn.lock ./
-
-COPY .babelrc ./
+COPY package*.json yarn.lock .babelrc ./
 COPY src/ src/
 
 RUN \
@@ -18,6 +15,6 @@ RUN \
   yarn run build &&\
   apk del build-deps
 
-EXPOSE 3030 5858
+COPY docker-entrypoint.sh /usr/local/bin
 
-CMD ["yarn", "run", "watch"]
+ENTRYPOINT ["docker-entrypoint.sh"]
