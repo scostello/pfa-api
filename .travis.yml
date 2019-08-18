@@ -19,12 +19,14 @@ jobs:
   include:
     - stage: Build Image
       script:
-        - docker build -t pfa-api-test .
+        - docker build -t pfa-api-ci .
         - docker images
+        - docker tag pfa-api-ci quay.io/$DOCKER_USERNAME/pfa-api-ci:$TRAVIS_BUILD_NUMBER
+        - docker push quay.io/$DOCKER_USERNAME/pfa-api-ci:$TRAVIS_BUILD_NUMBER
     - stage: Test Image
       script:
-        - docker run --rm pfa-api-test test
-        - docker run -p 127.0.0.1:4000:4000 pfa-api-test start
+        - docker run --rm quay.io/$DOCKER_USERNAME/pfa-api-ci:$TRAVIS_BUILD_NUMBER test
+        - docker run -p 127.0.0.1:4000:4000 quay.io/$DOCKER_USERNAME/pfa-api-ci:$TRAVIS_BUILD_NUMBER start
         - curl 127.0.0.1:4000/.well-known/apollo/server-health | jq .status
     - stage: Release
       if: branch = master
