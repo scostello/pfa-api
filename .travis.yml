@@ -26,7 +26,7 @@ jobs:
     - stage: Test Image
       script:
         - docker run --rm quay.io/$DOCKER_USERNAME/pfa-api-ci:$TRAVIS_BUILD_NUMBER test
-        - docker run -p 127.0.0.1:4000:4000 quay.io/$DOCKER_USERNAME/pfa-api-ci:$TRAVIS_BUILD_NUMBER start
+        - docker run -d -p 127.0.0.1:4000:4000 quay.io/$DOCKER_USERNAME/pfa-api-ci:$TRAVIS_BUILD_NUMBER start
         - curl 127.0.0.1:4000/.well-known/apollo/server-health | jq .status
     - stage: Release
       if: branch = master
