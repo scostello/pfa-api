@@ -1,13 +1,27 @@
 sudo: required
 
-language: minimal
+language: node_js
+node_js:
+  - "12"
 
 services:
   - docker
 
 before_install:
+  - sudo apt-get install jq curl -y
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin quay.io
-  - docker build -t quay.io/sean.costello/pfa-api:latest .
 
-script:
-  - docker images
+jobs:
+  include:
+    - stage: Build Image
+      script:
+        - docker build -t pfa-api-test .
+    - stage: Test Image
+      script:
+        - docker run pfa-api-test start
+        - docker images
+        - curl localhost:4000/.well-known/apollo/server-health | jq .status
+    - stage: Release
+      if: branch = master
+      script:
+        - npx semantic-release --branch master --repository-url https://github.com/scostello/pfa-api
