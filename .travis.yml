@@ -8,19 +8,24 @@ services:
   - docker
 
 before_install:
-  - sudo apt-get install jq curl -y
+  - sudo apt-get install jq -y
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin quay.io
+
+# All stages, except for the Release stage, utilize a built docker image
+# No need to duplicate package installs
+install: skip
 
 jobs:
   include:
     - stage: Build Image
       script:
         - docker build -t pfa-api-test .
+        - docker images
     - stage: Test Image
       script:
-        - docker run pfa-api-test start
-        - docker images
-        - curl localhost:4000/.well-known/apollo/server-health | jq .status
+        - docker run --rm pfa-api-test test
+        - docker run -p 127.0.0.1:4000:4000 pfa-api-test start
+        - curl 127.0.0.1:4000/.well-known/apollo/server-health | jq .status
     - stage: Release
       if: branch = master
       script:
