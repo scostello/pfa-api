@@ -27,10 +27,14 @@ jobs:
       script:
         - docker run --rm quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER test
     - stage: Release
-      if: branch = master
-      script:
-        - npx semantic-release --branch master --repository-url https://github.com/scostello/pfa-api
-        - export RELEASE_VERSION=$(cat package.json | jq -r .version)
-        - docker pull quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER
-        - docker tag quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER quay.io/$DOCKER_USERNAME/pfa-api:release-$RELEASE_VERSION
-        - docker push quay.io/$DOCKER_USERNAME/pfa-api:release-$RELEASE_VERSION
+      deploy:
+        provider: script
+        skip_cleanup: true
+        on:
+          branch: master
+        script:
+          - npx semantic-release --branch master --repository-url https://github.com/scostello/pfa-api
+          - export RELEASE_VERSION=$(cat package.json | jq -r .version)
+          - docker pull quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER
+          - docker tag quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER quay.io/$DOCKER_USERNAME/pfa-api:release-$RELEASE_VERSION
+          - docker push quay.io/$DOCKER_USERNAME/pfa-api:release-$RELEASE_VERSION
