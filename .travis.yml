@@ -27,6 +27,7 @@ jobs:
       script:
         - docker run --rm quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER test
     - stage: Release
+      script: skip
       deploy:
         provider: script
         skip_cleanup: true
