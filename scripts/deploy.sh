@@ -4,7 +4,6 @@ prev_version=$(cat package.json | jq -r .version)
 
 # Running semantic-release
 npx \
-  -p semantic-release \
   -p @semantic-release/commit-analyzer \
   -p @semantic-release/release-notes-generator \
   -p @semantic-release/changelog \
@@ -12,7 +11,8 @@ npx \
   -p @semantic-release/git \
   -p @semantic-release/github \
   --branch master \
-  --repository-url https://github.com/scostello/pfa-api
+  --repository-url https://github.com/scostello/pfa-api \
+  semantic-release
 
 # Grab the release version from package.json
 new_version=$(cat package.json | jq -r .version)
