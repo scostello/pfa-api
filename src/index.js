@@ -7,7 +7,7 @@ const config = {
 };
 
 const listenCallback = () =>
-  console.log('🚀 Server ready at http://localhost:4000!!');
+  console.log(`🚀 Server ready at http://${config.host}:${config.port}!!`);
 
 createApi()
   .subscribe({

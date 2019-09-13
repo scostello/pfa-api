@@ -1,13 +1,51 @@
 sudo: required
 
-language: minimal
+language: node_js
+node_js:
+  - "12"
 
 services:
   - docker
 
 before_install:
+  - sudo apt-get install jq -y
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin quay.io
-  - docker build -t quay.io/sean.costello/pfa-api:latest .
 
-script:
-  - docker images
+# All stages, except for the Release stage, utilize a built docker image
+# No need to duplicate package installs
+install: skip
+
+jobs:
+  include:
+    - stage: Build Image
+      script:
+        - docker build -t pfa-api-ci .
+        - docker images
+        - docker tag pfa-api-ci quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER
+        - docker push quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER
+    - stage: Test Image
+      script:
+        - docker run --rm quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER test
+    - stage: Release
+      script: skip
+      deploy:
+        provider: script
+        skip_cleanup: true
+        on:
+          branch: master
+        script: |-
+          npx \
+            -p semantic-release \
+            -p @semantic-release/commit-analyzer \
+            -p @semantic-release/release-notes-generator \
+            -p @semantic-release/changelog \
+            -p @semantic-release/npm \
+            -p @semantic-release/git \
+            -p @semantic-release/github \
+            --branch master \
+            --repository-url https://github.com/scostello/pfa-api
+          export RELEASE_VERSION=$(cat package.json | jq -r .version)
+
+          docker pull quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER
+          docker tag quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER quay.io/$DOCKER_USERNAME/pfa-api:release-$RELEASE_VERSION
+          docker push quay.io/$DOCKER_USERNAME/pfa-api:release-$RELEASE_VERSION

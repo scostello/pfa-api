@@ -1,5 +1,6 @@
 {
   "name": "pfa-api",
+  "private": true,
   "version": "0.1.0",
   "description": "The api gateway used for retrieving pro-football-analytics resources",
   "main": "server.js",
@@ -7,9 +8,8 @@
     "watch": "npm-watch restart",
     "restart": "npm run build && npm start",
     "build": "rm -rf lib/ && babel src/ -d lib/ && flow-copy-source src/ lib/",
-    "test": "npm run eslint && npm run mocha",
     "start": "babel-node lib/",
-    "mocha": "nyc mocha $NODE_DEBUG_OPTION --require babel-core/register {src,test}/**/*.{spec,test}.js --recursive --exit",
+    "test": "nyc mocha $NODE_DEBUG_OPTION --require @babel/register {src,test}/**/*.{spec,test}.js --recursive --exit",
     "flow": "flow",
     "flow-typed": "flow-typed"
   },
@@ -58,6 +58,12 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/register": "^7.4.4",
     "@babel/runtime": "^7.5.4",
+    "@semantic-release/changelog": "^3.0.4",
+    "@semantic-release/commit-analyzer": "^6.3.0",
+    "@semantic-release/git": "^7.0.16",
+    "@semantic-release/github": "^5.4.2",
+    "@semantic-release/npm": "^5.1.13",
+    "@semantic-release/release-notes-generator": "^7.3.0",
     "babel-eslint": "^10.0.2",
     "babel-plugin-dynamic-import-node": "^2.3.0",
     "chai": "^4.2.0",
@@ -72,6 +78,7 @@
     "flow-typed": "^2.5.2",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
-    "rimraf": "^2.6.3"
+    "rimraf": "^2.6.3",
+    "semantic-release": "^15.13.21"
   }
 }
