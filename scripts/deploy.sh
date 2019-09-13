@@ -4,6 +4,7 @@ prev_version=$(cat package.json | jq -r .version)
 
 # Running semantic-release
 npx \
+  -p semantic-release \
   -p @semantic-release/commit-analyzer \
   -p @semantic-release/release-notes-generator \
   -p @semantic-release/changelog \
