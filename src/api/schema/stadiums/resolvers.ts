@@ -1,16 +1,15 @@
-// @flow
 import * as R from 'ramda';
 
-type StadiumsOrder = {
-  direction?: 'asc' | 'desc',
-  field?: 'id' | 'name',
-};
+export interface StadiumsOrder {
+  readonly direction?: 'asc' | 'desc',
+  readonly field?: 'id' | 'name',
+}
 
-type StadiumsArgs = {
-  cursor?: ?string,
-  first?: ?number,
-  orderBy?: ?StadiumsOrder,
-};
+export interface StadiumsArgs {
+  readonly cursor?: string,
+  readonly first?: number,
+  readonly orderBy?: StadiumsOrder,
+}
 
 export const StadiumResolvers = {
   Query: {
@@ -31,12 +30,12 @@ export const StadiumResolvers = {
   },
   StadiumConnection: {
     nodes: ({ stadiums }) => stadiums,
-    edges: ({ stadiums }, args, { util }) => stadiums
+    edges: ({ stadiums }, {}, { util }) => stadiums
       .map(util.nodeToEdge(util.toBase64)),
-    totalCount: ({ totalCount }) => totalCount,
-    pageInfo: ({ stadiums }, args, { util }) => ({
-      startCursor: util.toBase64(R.prop('cursor', R.head(stadiums))),
+    pageInfo: ({ stadiums }, {}, { util }) => ({
       endCursor: util.toBase64(R.prop('cursor', R.last(stadiums))),
+      startCursor: util.toBase64(R.prop('cursor', R.head(stadiums))),
     }),
+    totalCount: ({ totalCount }) => totalCount,
   },
 };

@@ -1,43 +1,42 @@
-// @flow
 import Bluebird from 'bluebird';
 
-type Location = {
-  googleLocation?: ?Object,
-  street1: ?string,
-  street2: ?string,
-  city: ?string,
-  state: ?string,
-  zipcode: ?string,
-  countyFips: ?number,
-  longitude: ?number,
-  latitude: ?number,
-  geo: ?string,
-};
+interface Location {
+  readonly googleLocation: object;
+  readonly street1: string;
+  readonly street2: string;
+  readonly city: string;
+  readonly state: string;
+  readonly zipcode: string;
+  readonly countyFips: number;
+  readonly longitude: number;
+  readonly latitude: number;
+  readonly geo: string;
+}
 
-type DbStadium = {
-  id_stadium: string,
-  stadium_name: string,
-  capacity: ?number,
-  year_opened: ?number,
-  google_location: Object,
-  location_street1: ?string,
-  location_street2: ?string,
-  location_city: ?string,
-  location_state: ?string,
-  location_zipcode: ?string,
-  location_county_fips: ?number,
-  location_longitude: number,
-  location_latitude: number,
-  location_geo: string,
-};
+interface DbStadium {
+  readonly id_stadium: string;
+  readonly stadium_name: string;
+  readonly capacity: number;
+  readonly year_opened: number;
+  readonly google_location: object;
+  readonly location_street1: string;
+  readonly location_street2: string;
+  readonly location_city: string;
+  readonly location_state: string;
+  readonly location_zipcode: string;
+  readonly location_county_fips: number;
+  readonly location_longitude: number;
+  readonly location_latitude: number;
+  readonly location_geo: string;
+}
 
-type JsStadium = {
-  id: string,
-  name: string,
-  capacity: ?number,
-  yearOpened: ?number,
-  location: Location,
-};
+interface JsStadium {
+  readonly id: string;
+  readonly name: string;
+  readonly capacity: number;
+  readonly yearOpened: number;
+  readonly location: Location;
+}
 
 const serialize = {
   fromDb(stadium: DbStadium): JsStadium {
@@ -74,16 +73,16 @@ const getTotalCount = db => db
   .count('id_stadium')
   .first();
 
-type OrderCriteria = {
-  direction: ('asc' | 'desc'),
-  field: string,
-};
+interface OrderCriteria {
+  readonly direction: ('asc' | 'desc'),
+  readonly field: string,
+}
 
-type FindCriteria = {
-  cursor?: string,
-  first?: ?number,
-  orderBy?: OrderCriteria,
-};
+interface FindCriteria {
+  readonly cursor?: string,
+  readonly first?: number,
+  readonly orderBy?: OrderCriteria,
+}
 
 export default db => ({
   find(criteria: FindCriteria) {

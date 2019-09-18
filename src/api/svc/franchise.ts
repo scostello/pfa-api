@@ -1,25 +1,24 @@
-// @flow
 import Bluebird from 'bluebird';
 
-type DbFranchise = {
-  id_franchise: string,
-  id_stadium: string,
-  current_name_abbr: string,
-  current_name_full: string,
-  current_mascot: string,
-  active_from: number,
-  active_to: number,
-};
+export interface DbFranchise {
+  readonly id_franchise: string,
+  readonly id_stadium: string,
+  readonly current_name_abbr: string,
+  readonly current_name_full: string,
+  readonly current_mascot: string,
+  readonly active_from: number,
+  readonly active_to: number,
+}
 
-type JsFranchise = {
-  id: string,
-  idStadium: string,
-  currentNameAbbr: string,
-  currentNameFull: string,
-  currentMascot: string,
-  activeFrom: number,
-  activeTo: number,
-};
+export interface JsFranchise {
+  readonly id: string,
+  readonly idStadium: string,
+  readonly currentNameAbbr: string,
+  readonly currentNameFull: string,
+  readonly currentMascot: string,
+  readonly activeFrom: number,
+  readonly activeTo: number,
+}
 
 const serialize = {
   fromDb(franchise: DbFranchise): JsFranchise {
@@ -47,19 +46,23 @@ const getTotalCount = db => db
   .count('id_franchise')
   .first();
 
-type OrderCriteria = {
-  direction: ('asc' | 'desc'),
-  field: string,
-};
+interface OrderCriteria {
+  readonly direction: ('asc' | 'desc'),
+  readonly field: string,
+}
 
-type FindCriteria = {
-  cursor?: string,
-  first?: ?number,
-  orderBy?: OrderCriteria,
-};
+interface FindCriteria {
+  readonly cursor?: string,
+  readonly first?: number,
+  readonly orderBy?: OrderCriteria,
+}
 
-export default db => ({
-  find(criteria: FindCriteria) {
+interface FranchiseSvc {
+  readonly find: (FindCriteria) => Bluebird<any>;
+}
+
+export default (db): FranchiseSvc => ({
+  find: (criteria: FindCriteria) => {
     const {
       cursor,
       first = 10,

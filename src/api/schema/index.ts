@@ -1,14 +1,13 @@
-// @flow
-import * as R from 'ramda';
-import { makeExecutableSchema } from 'graphql-tools';
 import { gql } from 'apollo-server';
-import merge from 'lodash.merge';
-import GraphQLJSON from 'graphql-type-json';
 import {
   GraphQLDate,
-  GraphQLTime,
   GraphQLDateTime,
+  GraphQLTime,
 } from 'graphql-iso-date';
+import { ITypeDefinitions, makeExecutableSchema} from 'graphql-tools';
+import GraphQLJSON from 'graphql-type-json';
+import merge from 'lodash.merge';
+import * as R from 'ramda';
 import common from './common';
 import franchises from './franchises';
 import stadiums from './stadiums';
@@ -51,21 +50,21 @@ const rootSchema = gql`
 
 const rootResolvers = {
   Date: GraphQLDate,
-  Time: GraphQLTime,
   DateTime: GraphQLDateTime,
   JSON: GraphQLJSON,
-  Query: {
+  Mutation: {
     _: () => true,
   },
-  Mutation: {
+  Query: {
     _: () => true,
   },
   Subscription: {
     _: () => true,
   },
+  Time: GraphQLTime,
 };
 
-const typeDefs = [
+const typeDefs: ITypeDefinitions = [
   rootSchema,
   ...common.typeDefs,
   ...franchises.typeDefs,
@@ -81,6 +80,6 @@ const resolvers = merge(
 );
 
 export default makeExecutableSchema({
-  typeDefs,
   resolvers,
+  typeDefs,
 });

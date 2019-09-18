@@ -1,4 +1,3 @@
-// @flow
 import { KafkaPubSub } from 'graphql-kafka-subscriptions';
 
 const defaultConfig = {

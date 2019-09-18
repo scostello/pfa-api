@@ -1,45 +1,42 @@
-// @flow
-import http from 'http';
-import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
-import Dataloader from 'dataloader';
+import express from 'express';
+import http from 'http';
+import client from 'knex';
 import * as Rx from 'rxjs';
 import * as RxOp from 'rxjs/operators';
 
-import initDb from 'knex';
-import util from './util';
-import { FranchiseSvcFxty, StadiumFxty } from './svc';
 import schema from './schema';
+import { FranchiseSvcFxty, StadiumSvcFxty } from './svc';
+import util from './util';
 
 const getContext = (db) => {
   const franchiseSvc = FranchiseSvcFxty(db);
-  const stadiumSvc = StadiumFxty(db);
+  const stadiumSvc = StadiumSvcFxty(db);
 
-  return ({ req }) => ({
+  return () => ({
     franchiseSvc,
     stadiumSvc,
     util,
   });
 };
 
-const mapServer = ([_db, _app, _httpServerFxty, _gqlServerFxty]) => {
-  _app.use('/healthz', (req, res) => res.sendStatus(200));
-  const gqlServer = _gqlServerFxty(getContext(_db));
-  gqlServer.applyMiddleware({ app: _app });
-  const httpServer = _httpServerFxty(_app);
+const mapServer = ([db, app, httpServerFxty, gqlServerFxty]) => {
+  const gqlServer = gqlServerFxty(getContext(db))
+    .applyMiddleware({ app });
+  const httpServer = httpServerFxty(app);
   gqlServer.installSubscriptionHandlers(httpServer);
   return Rx.of(httpServer);
 };
 
 export default () => {
-  const db$ = Rx.of(initDb({
+  const db$ = Rx.of(client({
     client: 'pg',
     connection: {
-      host: process.env.PG_HOST || 'localhost',
-      port: process.env.PG_PORT || 5432,
       database: process.env.PG_DB_NAME || 'postgres',
-      user: process.env.PG_DB_USER || 'postgres',
+      host: process.env.PG_HOST || 'localhost',
       password: process.env.PG_DB_PASSWORD || null,
+      port: Number(process.env.PG_PORT) || 5432,
+      user: process.env.PG_DB_USER || 'postgres',
     },
   }));
   const app$ = Rx.of(express());

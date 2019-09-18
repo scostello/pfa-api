@@ -7,7 +7,7 @@ ENV BUILD_LIBRDKAFKA=0
 
 WORKDIR ${APP_PATH}
 
-COPY package*.json yarn.lock .babelrc ./
+COPY package*.json yarn.lock tsconfig.json ./
 COPY src/ src/
 
 RUN \
@@ -18,3 +18,4 @@ RUN \
 COPY docker-entrypoint.sh /usr/local/bin
 
 ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["start"]

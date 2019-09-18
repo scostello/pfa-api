@@ -1,4 +1,3 @@
-// @flow
 import createApi from './api';
 
 const config = {
@@ -7,7 +6,7 @@ const config = {
 };
 
 const listenCallback = () =>
-  console.log(`🚀 Server ready at http://${config.host}:${config.port}!!`);
+  console.log(`🚀 Server ready at http://${config.host}:${config.port}!`);
 
 createApi()
   .subscribe({

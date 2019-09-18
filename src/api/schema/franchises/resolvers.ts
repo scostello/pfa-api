@@ -1,16 +1,15 @@
-// @flow
 import * as R from 'ramda';
 
-type FranchisesOrder = {
-  direction?: 'asc' | 'desc',
-  field?: 'id' | 'name',
-};
+export interface FranchisesOrder {
+  readonly direction?: 'asc' | 'desc',
+  readonly field?: 'id' | 'name',
+}
 
-type FranchisesArgs = {
-  cursor?: ?string,
-  first?: ?number,
-  orderBy?: ?FranchisesOrder,
-};
+export interface FranchisesArgs {
+  readonly cursor?: string,
+  readonly first?: number,
+  readonly orderBy?: FranchisesOrder,
+}
 
 export const FranchiseResolvers = {
   Query: {
@@ -31,16 +30,16 @@ export const FranchiseResolvers = {
   },
   FranchiseConnection: {
     nodes: ({ franchises }) => franchises,
-    edges: ({ franchises }, args, { util }) => franchises
+    edges: ({ franchises }, {}, { util }) => franchises
       .map(util.nodeToEdge(util.toBase64)),
     totalCount: ({ totalCount }) => totalCount,
-    pageInfo: ({ franchises }, args, { util }) => ({
-      startCursor: util.toBase64(R.prop('cursor', R.head(franchises))),
+    pageInfo: ({ franchises }, {}, { util }) => ({
       endCursor: util.toBase64(R.prop('cursor', R.last(franchises))),
+      startCursor: util.toBase64(R.prop('cursor', R.head(franchises))),
     }),
   },
   Franchise: {
-    currentStadium: async (franchise, args, { stadiumSvc }) => stadiumSvc
+    currentStadium: async (franchise, {}, { stadiumSvc }) => stadiumSvc
       .getStadiumById(franchise.idStadium),
   },
 };

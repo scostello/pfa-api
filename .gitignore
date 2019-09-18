@@ -1,5 +1,6 @@
 quay-pull-secret.yaml
 node_modules
 lib
+dist
 .idea
 .nyc_output

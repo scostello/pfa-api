@@ -1,4 +1,3 @@
-// @flow
 import { CommonTypeDefs } from './typeDefs';
 
 export default {
