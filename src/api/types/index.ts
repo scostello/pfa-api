@@ -36,17 +36,17 @@ export interface Franchise {
 }
 
 export type Position =
-  'DB' |
-  'DL' |
-  'K' |
-  'LB' |
-  'LS' |
-  'OL' |
-  'QB' |
-  'RB' |
-  'TE' |
-  'WR' |
-  'INA';
+  | 'DB'
+  | 'DL'
+  | 'K'
+  | 'LB'
+  | 'LS'
+  | 'OL'
+  | 'QB'
+  | 'RB'
+  | 'TE'
+  | 'WR'
+  | 'INA';
 
 export interface PlayerPosition {
   readonly primary: Position;

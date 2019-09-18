@@ -26,7 +26,15 @@
         "no-mixed-interface": true,
         "no-expression-statement": [
             true,
-            { "ignore-prefix": ["console.", "process.exit"] }
+            {
+                "ignore-prefix": [
+                    "console.",
+                    "process.exit",
+                    "describe",
+                    "it",
+                    "expect"
+                ]
+            }
         ],
         "no-if-statement": true,
         /* end tslint-immutable rules */

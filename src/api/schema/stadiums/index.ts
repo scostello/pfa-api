@@ -3,5 +3,5 @@ import { StadiumSchema } from './typeDefs';
 
 export default {
   resolvers: StadiumResolvers,
-  typeDefs: [StadiumSchema],
+  typeDefs: [StadiumSchema]
 };

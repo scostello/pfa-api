@@ -12,7 +12,7 @@
     "fix:prettier": "prettier \"src/**/*.ts\" --write",
     "fix:tslint": "tslint --fix --project .",
     "test": "run-s build test:*",
-    "test:lint": "tslint --project . && prettier \"src/**/*.ts\" --list-different",
+    "test:lint": "tslint --project . && prettier \"src/**/*.ts\" --check",
     "test:unit": "nyc mocha -r ts-node/register src/**/*.{spec,test}.ts --recursive --exit",
     "watch": "run-s clean build:main && run-p \"build:main -- -w\" \"test:unit -- --watch\" \"watch:node\" ",
     "watch:node": "nodemon ./dist/index.js",

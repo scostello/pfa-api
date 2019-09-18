@@ -2,25 +2,25 @@ import { gql } from 'apollo-server';
 
 export const FranchiseSchema = gql`
   type Franchise implements Node {
-    id                : ID!
-    currentStadium    : Stadium
-    currentNameAbbr   : String!
-    currentNameFull   : String!
-    currentMascot     : String!
-    activeFrom        : Int!
-    activeTo          : Int!
+    id: ID!
+    currentStadium: Stadium
+    currentNameAbbr: String!
+    currentNameFull: String!
+    currentMascot: String!
+    activeFrom: Int!
+    activeTo: Int!
   }
 
   type FranchiseEdge {
-    cursor  : String!
-    node    : Franchise
+    cursor: String!
+    node: Franchise
   }
 
   type FranchiseConnection {
-    edges       : [FranchiseEdge]
-    nodes       : [Franchise]
-    pageInfo    : PageInfo!
-    totalCount  : Int!
+    edges: [FranchiseEdge]
+    nodes: [Franchise]
+    pageInfo: PageInfo!
+    totalCount: Int!
   }
 
   enum FranchiseOrderField {
@@ -29,15 +29,15 @@ export const FranchiseSchema = gql`
   }
 
   input FranchiseOrder {
-    direction : OrderDirection!
-    field     : FranchiseOrderField!
+    direction: OrderDirection!
+    field: FranchiseOrderField!
   }
 
   extend type Query {
     franchises(
-      cursor  : String
-      first   : Int
-      orderBy : FranchiseOrder
+      cursor: String
+      first: Int
+      orderBy: FranchiseOrder
     ): FranchiseConnection!
   }
 `;

@@ -55,73 +55,81 @@ const serialize = {
         countyFips: (stadium || {}).location_county_fips,
         longitude: (stadium || {}).location_longitude,
         latitude: (stadium || {}).location_latitude,
-        geo: (stadium || {}).location_geo,
-      },
+        geo: (stadium || {}).location_geo
+      }
     };
   },
-  totalCount: ({ count }) => count,
+  totalCount: ({ count }) => count
 };
 
 const orderByMap = {
   id: 'id_stadium',
-  name: 'name',
+  name: 'name'
 };
 
-const getTotalCount = db => db
-  .withSchema('reporting')
-  .from('stadiums')
-  .count('id_stadium')
-  .first();
+const getTotalCount = db =>
+  db
+    .withSchema('reporting')
+    .from('stadiums')
+    .count('id_stadium')
+    .first();
 
 interface OrderCriteria {
-  readonly direction: ('asc' | 'desc'),
-  readonly field: string,
+  readonly direction: 'asc' | 'desc';
+  readonly field: string;
 }
 
 interface FindCriteria {
-  readonly cursor?: string,
-  readonly first?: number,
-  readonly orderBy?: OrderCriteria,
+  readonly cursor?: string;
+  readonly first?: number;
+  readonly orderBy?: OrderCriteria;
 }
 
-export default db => ({
-  find(criteria: FindCriteria) {
+interface StadiumSvc {
+  readonly find: (criteria: FindCriteria) => Bluebird<any>;
+  readonly getStadiumById: (id: string) => Bluebird<any>;
+}
+
+export default (db): StadiumSvc => ({
+  find: (criteria: FindCriteria) => {
     const {
       cursor,
       first = 10,
-      orderBy = { direction: 'asc', field: 'id' },
+      orderBy = { direction: 'asc', field: 'id' }
     } = criteria;
 
     const orderField = orderByMap[orderBy.field] || orderByMap.id;
     const orderDirection = orderBy.direction || 'asc';
 
-    const query = db
+    const builder = db
       .withSchema('reporting')
       .from('stadiums')
       .select('*')
       .limit(first)
-      .orderBy([{
-        column: orderField,
-        order: orderDirection,
-      }]);
+      .orderBy([
+        {
+          column: orderField,
+          order: orderDirection
+        }
+      ]);
 
-    if (cursor) {
-      query
-        .where(orderField, orderBy.direction === 'asc' ? '>' : '<', cursor);
-    }
+    const query = cursor
+      ? builder.where(
+          orderField,
+          orderBy.direction === 'asc' ? '>' : '<',
+          cursor
+        )
+      : builder;
 
-    return Bluebird
-      .props({
-        totalCount: getTotalCount(db)
-          .then(serialize.totalCount),
-        stadiums: query
-          .map(stadium => ({
-            ...serialize.fromDb(stadium),
-            cursor: stadium[orderField],
-          })),
-      });
+    return Bluebird.props({
+      totalCount: getTotalCount(db).then(serialize.totalCount),
+      stadiums: query.map(stadium => ({
+        ...serialize.fromDb(stadium),
+        cursor: stadium[orderField]
+      }))
+    });
   },
-  getStadiumById(id: string) {
+  getStadiumById: (id: string) => {
     return db
       .withSchema('reporting')
       .from('stadiums')
@@ -129,5 +137,5 @@ export default db => ({
       .select('*')
       .first()
       .then(serialize.fromDb);
-  },
+  }
 });
