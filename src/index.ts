@@ -1,7 +1,7 @@
 import createApi from './api';
 
 const config = {
-  host: process.env.API_HOST || '0.0.0.0',
+  host: process.env.API_HOST || 'localhost',
   port: process.env.API_PORT || 4000
 };
 
