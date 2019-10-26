@@ -25,7 +25,8 @@ jobs:
         - docker push quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER
     - stage: Test Image
       script:
-        - docker run --rm quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER test
+        - docker run --rm quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER test:lint
+        - docker run --rm quay.io/$DOCKER_USERNAME/pfa-api:build-$TRAVIS_BUILD_NUMBER test:unit
     - stage: Release
       script: skip
       node_js: "12"

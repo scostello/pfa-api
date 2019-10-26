@@ -1,6 +1,5 @@
-// @flow
 import { CommonTypeDefs } from './typeDefs';
 
 export default {
-  typeDefs: [CommonTypeDefs],
+  typeDefs: [CommonTypeDefs]
 };

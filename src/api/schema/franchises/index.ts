@@ -1,8 +1,7 @@
-// @flow
-import { FranchiseSchema } from './typeDefs';
 import { FranchiseResolvers } from './resolvers';
+import { FranchiseSchema } from './typeDefs';
 
 export default {
-  typeDefs: [FranchiseSchema],
   resolvers: FranchiseResolvers,
+  typeDefs: [FranchiseSchema]
 };

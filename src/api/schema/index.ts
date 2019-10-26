@@ -1,14 +1,9 @@
-// @flow
-import * as R from 'ramda';
-import { makeExecutableSchema } from 'graphql-tools';
 import { gql } from 'apollo-server';
-import merge from 'lodash.merge';
+import { GraphQLDate, GraphQLDateTime, GraphQLTime } from 'graphql-iso-date';
+import { ITypeDefinitions, makeExecutableSchema } from 'graphql-tools';
 import GraphQLJSON from 'graphql-type-json';
-import {
-  GraphQLDate,
-  GraphQLTime,
-  GraphQLDateTime,
-} from 'graphql-iso-date';
+import merge from 'lodash.merge';
+import * as R from 'ramda';
 import common from './common';
 import franchises from './franchises';
 import stadiums from './stadiums';
@@ -18,32 +13,32 @@ const rootSchema = gql`
   scalar Date
   scalar Time
   scalar DateTime
-  
+
   enum OrderDirection {
     asc
     desc
   }
-  
+
   interface Node {
-    id  : ID!
+    id: ID!
   }
-  
+
   type PageInfo {
-    startCursor     : String
-    endCursor       : String    
-    hasNextPage     : Boolean!
-    hasPreviousPage : Boolean!
+    startCursor: String
+    endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
   }
-  
+
   # Base Query type we'll use to extend in the other modules
   type Query {
-    _ : Boolean
+    _: Boolean
   }
-  
+
   type Mutation {
     _: Boolean
   }
-  
+
   type Subscription {
     _: Boolean
   }
@@ -51,25 +46,25 @@ const rootSchema = gql`
 
 const rootResolvers = {
   Date: GraphQLDate,
-  Time: GraphQLTime,
   DateTime: GraphQLDateTime,
   JSON: GraphQLJSON,
-  Query: {
-    _: () => true,
-  },
   Mutation: {
-    _: () => true,
+    _: () => true
+  },
+  Query: {
+    _: () => true
   },
   Subscription: {
-    _: () => true,
+    _: () => true
   },
+  Time: GraphQLTime
 };
 
-const typeDefs = [
+const typeDefs: ITypeDefinitions = [
   rootSchema,
   ...common.typeDefs,
   ...franchises.typeDefs,
-  ...stadiums.typeDefs,
+  ...stadiums.typeDefs
 ];
 
 const resolversFrom = R.prop('resolvers');
@@ -77,10 +72,10 @@ const resolversFrom = R.prop('resolvers');
 const resolvers = merge(
   rootResolvers,
   resolversFrom(franchises),
-  resolversFrom(stadiums),
+  resolversFrom(stadiums)
 );
 
 export default makeExecutableSchema({
-  typeDefs,
   resolvers,
+  typeDefs
 });

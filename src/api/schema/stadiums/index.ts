@@ -1,8 +1,7 @@
-// @flow
-import { StadiumSchema } from './typeDefs';
 import { StadiumResolvers } from './resolvers';
+import { StadiumSchema } from './typeDefs';
 
 export default {
-  typeDefs: [StadiumSchema],
   resolvers: StadiumResolvers,
+  typeDefs: [StadiumSchema]
 };
