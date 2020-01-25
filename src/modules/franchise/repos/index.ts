@@ -1,0 +1,1 @@
+export { CreateFranchiseRepo } from './franchiseRepo';

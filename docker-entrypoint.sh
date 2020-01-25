@@ -4,4 +4,4 @@ set -e
 
 script="${1:-start}"
 
-exec yarn run "${script}"
+exec npm run "${script}"
