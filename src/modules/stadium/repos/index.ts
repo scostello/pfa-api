@@ -1,0 +1,1 @@
+export { CreateStadiumRepo } from './stadiumRepo';

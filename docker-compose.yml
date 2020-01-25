@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["start"]
+    command: ["watch"]
     environment:
       NODE_ENV: "local"
       PG_HOST: postgres
@@ -21,11 +21,12 @@ services:
       - "4000:4000"
 
   postgres:
-    image: quay.io/sean.costello/postgis:2.5.2-debian
+    image: quay.io/sean.costello/postgis:3.0.0-debian
     environment:
       POSTGRESQL_USERNAME: postgres
       POSTGRESQL_PASSWORD: mysecretpassword
       POSTGRESQL_DATABASE: pro_football_analytics
+      BITNAMI_DEBUG: "true"
     volumes:
       - ./initdb.d:/docker-entrypoint-initdb.d
       - pg-data:/bitnami

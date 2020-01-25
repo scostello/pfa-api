@@ -1,4 +1,4 @@
-FROM quay.io/sean.costello/nodejs-rdkafka:12.3.1-1.0.1@sha256:a93b5e065499dd2bdc409fe24747046e1040477cc5c917dc973fb224a5ef15db
+FROM quay.io/sean.costello/nodejs-rdkafka:12.14.1-1.3.0
 
 ENV APPS_DIR=/apps
 ENV APP_NAME=pfa-api
@@ -7,13 +7,12 @@ ENV BUILD_LIBRDKAFKA=0
 
 WORKDIR ${APP_PATH}
 
-COPY package*.json yarn.lock tsconfig.json ./
+COPY package*.json tsconfig.json ./
 COPY src/ src/
 
-RUN \
-  yarn install &&\
-  yarn run build &&\
-  apk del build-deps
+RUN npm ci \
+  && npm run build \
+  && apk del build-deps
 
 COPY docker-entrypoint.sh /usr/local/bin
 
