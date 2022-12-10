@@ -26,7 +26,7 @@
     "apollo-server-express": "^2.9.16",
     "bluebird": "^3.7.2",
     "dataloader": "^2.0.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "folktale": "^2.3.2",
     "geojson": "^0.5.0",
     "graphql": "^14.5.8",
